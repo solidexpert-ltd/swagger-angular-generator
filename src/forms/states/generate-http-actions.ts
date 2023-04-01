@@ -26,7 +26,7 @@ export function generateHttpActions(config: Config, name: string, responseDef: R
 function getActionImports(name: string, simpleName: string, hasParams: boolean,
                           importModels: boolean) {
   let res = `import {HttpErrorResponse} from '@angular/common/http';\n`;
-  res += `import {Action} from '@ngrx/store';\n`;
+  res += `import {createAction, props} from '@ngrx/store';\n`;
 
   if (hasParams) {
     res += `import {${_.upperFirst(simpleName)}Params} from '../../../../controllers/${name}';\n`;
@@ -50,38 +50,52 @@ function getActionTypes(controllerName: string, methodName: string) {
 }
 
 function getActionStartDefinition(name: string, hasParams: boolean) {
-  let res = `export class Start implements Action {\n`;
-  res += indent(`readonly type = Actions.START;\n`);
-  const params = hasParams ? `public payload: ${ _.upperFirst(name) }Params` : '';
-  res += indent(`constructor(${params}) {}\n`);
-  res += `}\n`;
-  res += `\n`;
+
+  const params = hasParams ? `,props<${ _.upperFirst(name) }Params>()` : '';
+
+  let res  = `export const start = createAction(Actions.START${params});\n`
+  // let res = `export class Start implements Action {\n`;
+  // res += indent(`readonly type = Actions.START;\n`);
+  // const params = hasParams ? `public payload: ${ _.upperFirst(name) }Params` : '';
+  // res += indent(`constructor(${params}) {}\n`);
+  // res += `}\n`;
+  // res += `\n`;
 
   return res;
 }
 
 function getActionSuccessDefinition(response: ResponseDef) {
-  let res = `export class Success implements Action {\n`;
-  res += indent(`readonly type = Actions.SUCCESS;\n`);
-  res += indent(`constructor(public payload: ${response.type}) {}\n`);
-  res += `}\n`;
-  res += `\n`;
+  
+  const params = `,props<${response.type}>()`;
+
+  let res  = `export const success = createAction(Actions.SUCCESS${params});\n`
+
+  // let res = `export class Success implements Action {\n`;
+  // res += indent(`readonly type = Actions.SUCCESS;\n`);
+  // res += indent(`constructor(public payload: ${response.type}) {}\n`);
+  // res += `}\n`;
+  // res += `\n`;
 
   return res;
 }
 
 function getActionErrorDefinition() {
-  let res = `export class Error implements Action {\n`;
-  res += indent(`readonly type = Actions.ERROR;\n`);
-  res += indent(`constructor(public payload: HttpErrorResponse) {}\n`);
-  res += `}\n`;
-  res += `\n`;
+
+  const params = `,props<any>()`;
+
+  let res  = `export const error = createAction(Actions.ERROR${params});\n`
+
+  //let res = `export class Error implements Action {\n`;
+  // res += indent(`readonly type = Actions.ERROR;\n`);
+  // res += indent(`constructor(public payload: HttpErrorResponse) {}\n`);
+  // res += `}\n`;
+  // res += `\n`;
 
   return res;
 }
 
 function getActionOverviewType(actionClassNameBase: string) {
-  return `export type ${actionClassNameBase}Action = Start | Success | Error;\n`;
+  return `//${actionClassNameBase}`;
 }
 
 export function getActionClassNameBase(name: string) {

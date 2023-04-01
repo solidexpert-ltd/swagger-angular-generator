@@ -14,13 +14,13 @@ import {FormsSharedModule} from '../../forms-shared.module';
 import {DeleteORDERFormService} from './deleteORDER.service';
 
 import {DeleteORDEREffects} from './states/effects';
-import {DeleteORDERReducer} from './states/reducers';
+import {deleteORDERReducer} from './states/reducers';
 import {selectorName} from './states/reducers';
 
 @NgModule({
   imports: [
     FormsSharedModule,
-    NgrxStoreModule.forFeature(selectorName, DeleteORDERReducer),
+    NgrxStoreModule.forFeature(selectorName, deleteORDERReducer),
     NgrxEffectsModule.forFeature([DeleteORDEREffects]),
   ],
   providers: [

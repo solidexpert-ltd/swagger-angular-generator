@@ -14,13 +14,13 @@ import {FormsSharedModule} from '../../forms-shared.module';
 import {RegistrationFormService} from './registration.service';
 
 import {RegistrationEffects} from './states/effects';
-import {RegistrationReducer} from './states/reducers';
+import {registrationReducer} from './states/reducers';
 import {selectorName} from './states/reducers';
 
 @NgModule({
   imports: [
     FormsSharedModule,
-    NgrxStoreModule.forFeature(selectorName, RegistrationReducer),
+    NgrxStoreModule.forFeature(selectorName, registrationReducer),
     NgrxEffectsModule.forFeature([RegistrationEffects]),
   ],
   providers: [

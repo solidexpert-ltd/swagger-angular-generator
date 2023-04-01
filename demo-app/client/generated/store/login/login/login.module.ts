@@ -14,13 +14,13 @@ import {FormsSharedModule} from '../../forms-shared.module';
 import {LoginFormService} from './login.service';
 
 import {LoginEffects} from './states/effects';
-import {LoginReducer} from './states/reducers';
+import {loginReducer} from './states/reducers';
 import {selectorName} from './states/reducers';
 
 @NgModule({
   imports: [
     FormsSharedModule,
-    NgrxStoreModule.forFeature(selectorName, LoginReducer),
+    NgrxStoreModule.forFeature(selectorName, loginReducer),
     NgrxEffectsModule.forFeature([LoginEffects]),
   ],
   providers: [

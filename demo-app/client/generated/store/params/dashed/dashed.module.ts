@@ -14,13 +14,13 @@ import {FormsSharedModule} from '../../forms-shared.module';
 import {DashedFormService} from './dashed.service';
 
 import {DashedEffects} from './states/effects';
-import {DashedReducer} from './states/reducers';
+import {dashedReducer} from './states/reducers';
 import {selectorName} from './states/reducers';
 
 @NgModule({
   imports: [
     FormsSharedModule,
-    NgrxStoreModule.forFeature(selectorName, DashedReducer),
+    NgrxStoreModule.forFeature(selectorName, dashedReducer),
     NgrxEffectsModule.forFeature([DashedEffects]),
   ],
   providers: [

@@ -13,13 +13,13 @@ import {RestAuthService} from '../../../controllers/RestAuth';
 import {FormsSharedModule} from '../../forms-shared.module';
 
 import {RestAuthUserReadEffects} from './states/effects';
-import {RestAuthUserReadReducer} from './states/reducers';
+import {restAuthUserReadReducer} from './states/reducers';
 import {selectorName} from './states/reducers';
 
 @NgModule({
   imports: [
     FormsSharedModule,
-    NgrxStoreModule.forFeature(selectorName, RestAuthUserReadReducer),
+    NgrxStoreModule.forFeature(selectorName, restAuthUserReadReducer),
     NgrxEffectsModule.forFeature([RestAuthUserReadEffects]),
   ],
   providers: [

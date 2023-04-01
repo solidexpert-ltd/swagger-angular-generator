@@ -13,13 +13,13 @@ import {RestAuthService} from '../../../controllers/RestAuth';
 import {FormsSharedModule} from '../../forms-shared.module';
 
 import {RestAuthLogoutListEffects} from './states/effects';
-import {RestAuthLogoutListReducer} from './states/reducers';
+import {restAuthLogoutListReducer} from './states/reducers';
 import {selectorName} from './states/reducers';
 
 @NgModule({
   imports: [
     FormsSharedModule,
-    NgrxStoreModule.forFeature(selectorName, RestAuthLogoutListReducer),
+    NgrxStoreModule.forFeature(selectorName, restAuthLogoutListReducer),
     NgrxEffectsModule.forFeature([RestAuthLogoutListEffects]),
   ],
   providers: [

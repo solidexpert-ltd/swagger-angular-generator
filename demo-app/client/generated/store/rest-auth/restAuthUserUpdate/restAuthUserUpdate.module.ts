@@ -14,13 +14,13 @@ import {FormsSharedModule} from '../../forms-shared.module';
 import {RestAuthUserUpdateFormService} from './restAuthUserUpdate.service';
 
 import {RestAuthUserUpdateEffects} from './states/effects';
-import {RestAuthUserUpdateReducer} from './states/reducers';
+import {restAuthUserUpdateReducer} from './states/reducers';
 import {selectorName} from './states/reducers';
 
 @NgModule({
   imports: [
     FormsSharedModule,
-    NgrxStoreModule.forFeature(selectorName, RestAuthUserUpdateReducer),
+    NgrxStoreModule.forFeature(selectorName, restAuthUserUpdateReducer),
     NgrxEffectsModule.forFeature([RestAuthUserUpdateEffects]),
   ],
   providers: [

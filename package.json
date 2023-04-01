@@ -1,7 +1,7 @@
 {
-  "name": "swagger-angular-generator",
-  "version": "4.2.2",
-  "description": "Generator of API layer in TypeScript for Angular 5 apps",
+  "name": "@solidexpert/swagger-angular-generator",
+  "version": "13.0.8",
+  "description": "Generator of API layer in TypeScript for Angular 13 apps",
   "main": "dist/generate.js",
   "types": "dist/generate.d.ts",
   "bin": "dist/index.js",
@@ -49,34 +49,33 @@
     "tsutils": "^3.8.0"
   },
   "devDependencies": {
-    "@angular/cli": "^7.3.3",
-    "@angular/common": "^7.2.7",
-    "@angular/core": "^7.2.7",
-    "@angular/forms": "^7.2.7",
-    "@angular/http": "^7.2.7",
-    "@angular/platform-browser": "^7.2.7",
-    "@ngrx/effects": "^7.3.0",
-    "@ngrx/store": "^7.3.0",
+    "@angular/cli": "~13.0.0",
+    "@angular/common": "~13.0.0",
+    "@angular/core": "~13.0.0",
+    "@angular/forms": "~13.0.0",
+    "@angular/http": "~13.0.0",
+    "@angular/platform-browser": "~13.0.0",
+    "@ngrx/effects": "^13.0.0",
+    "@ngrx/store": "^13.0.0",
     "@types/commander": "^2.12.2",
     "@types/lodash": "^4.14.121",
     "@types/node": "^11.9.5",
     "@types/tape": "^4.2.33",
-    "rxjs": "^6.4.0",
+    "rxjs": "~6.6.0",
     "tape": "^4.10.1",
     "ts-node": "^8.0.2",
     "tslint": "^5.13.0",
     "tslint-eslint-rules": "^5.4.0",
     "typescript": "^3.3.3333",
-    "zone.js": "^0.8.29"
+    "zone.js": "~0.11.4"
   },
   "peerDependencies": {
-    "@angular/common": "^7.2.7",
-    "@angular/core": "^7.2.7",
-    "@angular/http": "^7.2.7",
-    "@angular/platform-browser": "^7.2.7",
-    "@ngrx/effects": "^7.3.0",
-    "@ngrx/store": "^7.3.0",
-    "rxjs": "^6.4.0",
-    "zone.js": "^0.8.29"
+    "@angular/common": "~13.0.0",
+    "@angular/core": "~13.0.0",
+    "@angular/platform-browser": "~13.0.0",
+    "@ngrx/effects": "^13.0.0",
+    "@ngrx/store": "^13.0.0",
+    "rxjs": "~6.6.0",
+    "zone.js": "~0.11.4"
   }
 }

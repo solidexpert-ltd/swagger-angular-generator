@@ -14,13 +14,13 @@ import {FormsSharedModule} from '../../forms-shared.module';
 import {MapFormService} from './map.service';
 
 import {MapEffects} from './states/effects';
-import {MapReducer} from './states/reducers';
+import {mapReducer} from './states/reducers';
 import {selectorName} from './states/reducers';
 
 @NgModule({
   imports: [
     FormsSharedModule,
-    NgrxStoreModule.forFeature(selectorName, MapReducer),
+    NgrxStoreModule.forFeature(selectorName, mapReducer),
     NgrxEffectsModule.forFeature([MapEffects]),
   ],
   providers: [

@@ -6,7 +6,7 @@
  */
 
 import {HttpErrorResponse} from '@angular/common/http';
-import {Action} from '@ngrx/store';
+import {createAction, props} from '@ngrx/store';
 import {DashedParams} from '../../../../controllers/Params';
 
 export enum Actions {
@@ -15,19 +15,7 @@ export enum Actions {
   ERROR = '[Params dashed] Error',
 }
 
-export class Start implements Action {
-  readonly type = Actions.START;
-  constructor(public payload: DashedParams) {}
-}
-
-export class Success implements Action {
-  readonly type = Actions.SUCCESS;
-  constructor(public payload: void) {}
-}
-
-export class Error implements Action {
-  readonly type = Actions.ERROR;
-  constructor(public payload: HttpErrorResponse) {}
-}
-
-export type DashedAction = Start | Success | Error;
+export const start = createAction(Actions.START,props<DashedParams>());
+export const success = createAction(Actions.SUCCESS,props<void>());
+export const error = createAction(Actions.ERROR,props<any>());
+//Dashed

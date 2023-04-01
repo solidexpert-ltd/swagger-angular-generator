@@ -1,4 +1,5 @@
 import * as path from 'path';
+import * as _ from 'lodash'
 import {Config} from '../generate';
 import {indent, writeFile} from '../utils';
 
@@ -17,7 +18,7 @@ export function createModule(config: Config, name: string, actionClassNameBase: 
   content += `\n`;
 
   content += `import {${actionClassNameBase}Effects} from './states/effects';\n`;
-  content += `import {${actionClassNameBase}Reducer} from './states/reducers';\n`;
+  content += `import {${_.lowerFirst(actionClassNameBase)}Reducer} from './states/reducers';\n`;
   content += `import {selectorName} from './states/reducers';\n`;
   content += '\n';
   content += '@NgModule({\n';
@@ -26,7 +27,7 @@ export function createModule(config: Config, name: string, actionClassNameBase: 
   // TODO! use or remove
   content += indent('FormsSharedModule,\n', 2);
 
-  content += indent(`NgrxStoreModule.forFeature(selectorName, ${actionClassNameBase}Reducer),\n`, 2);
+  content += indent(`NgrxStoreModule.forFeature(selectorName, ${_.lowerFirst(actionClassNameBase)}Reducer),\n`, 2);
   content += indent(`NgrxEffectsModule.forFeature([${actionClassNameBase}Effects]),\n`, 2);
   content += indent('],\n');
 

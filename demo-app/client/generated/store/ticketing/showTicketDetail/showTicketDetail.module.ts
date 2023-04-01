@@ -14,13 +14,13 @@ import {FormsSharedModule} from '../../forms-shared.module';
 import {ShowTicketDetailFormService} from './showTicketDetail.service';
 
 import {ShowTicketDetailEffects} from './states/effects';
-import {ShowTicketDetailReducer} from './states/reducers';
+import {showTicketDetailReducer} from './states/reducers';
 import {selectorName} from './states/reducers';
 
 @NgModule({
   imports: [
     FormsSharedModule,
-    NgrxStoreModule.forFeature(selectorName, ShowTicketDetailReducer),
+    NgrxStoreModule.forFeature(selectorName, showTicketDetailReducer),
     NgrxEffectsModule.forFeature([ShowTicketDetailEffects]),
   ],
   providers: [

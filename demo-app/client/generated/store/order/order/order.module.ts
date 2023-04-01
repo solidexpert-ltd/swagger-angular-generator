@@ -14,13 +14,13 @@ import {FormsSharedModule} from '../../forms-shared.module';
 import {OrderFormService} from './order.service';
 
 import {OrderEffects} from './states/effects';
-import {OrderReducer} from './states/reducers';
+import {orderReducer} from './states/reducers';
 import {selectorName} from './states/reducers';
 
 @NgModule({
   imports: [
     FormsSharedModule,
-    NgrxStoreModule.forFeature(selectorName, OrderReducer),
+    NgrxStoreModule.forFeature(selectorName, orderReducer),
     NgrxEffectsModule.forFeature([OrderEffects]),
   ],
   providers: [

@@ -14,13 +14,13 @@ import {FormsSharedModule} from '../../forms-shared.module';
 import {GetGoodsListFormService} from './getGoodsList.service';
 
 import {GetGoodsListEffects} from './states/effects';
-import {GetGoodsListReducer} from './states/reducers';
+import {getGoodsListReducer} from './states/reducers';
 import {selectorName} from './states/reducers';
 
 @NgModule({
   imports: [
     FormsSharedModule,
-    NgrxStoreModule.forFeature(selectorName, GetGoodsListReducer),
+    NgrxStoreModule.forFeature(selectorName, getGoodsListReducer),
     NgrxEffectsModule.forFeature([GetGoodsListEffects]),
   ],
   providers: [

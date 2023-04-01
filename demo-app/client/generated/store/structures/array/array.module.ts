@@ -14,13 +14,13 @@ import {FormsSharedModule} from '../../forms-shared.module';
 import {ArrayFormService} from './array.service';
 
 import {ArrayEffects} from './states/effects';
-import {ArrayReducer} from './states/reducers';
+import {arrayReducer} from './states/reducers';
 import {selectorName} from './states/reducers';
 
 @NgModule({
   imports: [
     FormsSharedModule,
-    NgrxStoreModule.forFeature(selectorName, ArrayReducer),
+    NgrxStoreModule.forFeature(selectorName, arrayReducer),
     NgrxEffectsModule.forFeature([ArrayEffects]),
   ],
   providers: [

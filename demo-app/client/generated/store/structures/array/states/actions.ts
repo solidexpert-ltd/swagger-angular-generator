@@ -6,7 +6,7 @@
  */
 
 import {HttpErrorResponse} from '@angular/common/http';
-import {Action} from '@ngrx/store';
+import {createAction, props} from '@ngrx/store';
 import {ArrayParams} from '../../../../controllers/Structures';
 import * as __model from '../../../../model';
 
@@ -16,19 +16,7 @@ export enum Actions {
   ERROR = '[Structures array] Error',
 }
 
-export class Start implements Action {
-  readonly type = Actions.START;
-  constructor(public payload: ArrayParams) {}
-}
-
-export class Success implements Action {
-  readonly type = Actions.SUCCESS;
-  constructor(public payload: __model.ArrayGeneratedInlineModel) {}
-}
-
-export class Error implements Action {
-  readonly type = Actions.ERROR;
-  constructor(public payload: HttpErrorResponse) {}
-}
-
-export type ArrayAction = Start | Success | Error;
+export const start = createAction(Actions.START,props<ArrayParams>());
+export const success = createAction(Actions.SUCCESS,props<__model.ArrayGeneratedInlineModel>());
+export const error = createAction(Actions.ERROR,props<any>());
+//Array

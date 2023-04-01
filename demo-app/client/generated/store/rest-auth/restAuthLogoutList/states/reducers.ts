@@ -5,7 +5,7 @@
  * example.com/api-base-path
  */
 
-import {createFeatureSelector} from '@ngrx/store';
+import {createFeatureSelector, createReducer, on} from '@ngrx/store';
 
 import {HttpErrorResponse} from '@angular/common/http';
 import * as actions from './actions';
@@ -25,13 +25,8 @@ export const initialRestAuthLogoutListState: RestAuthLogoutListState = {
 export const selectorName = 'RestAuth_RestAuthLogoutList';
 export const getRestAuthLogoutListStateSelector = createFeatureSelector<RestAuthLogoutListState>(selectorName);
 
-export function RestAuthLogoutListReducer(
-  state: RestAuthLogoutListState = initialRestAuthLogoutListState,
-  action: actions.RestAuthLogoutListAction): RestAuthLogoutListState {
-  switch (action.type) {
-    case actions.Actions.START: return {...state, loading: true, error: null};
-    case actions.Actions.SUCCESS: return {...state, data: action.payload, loading: false};
-    case actions.Actions.ERROR: return {...state, error: action.payload, loading: false};
-    default: return state;
-  }
-}
+ export const restAuthLogoutListReducer = createReducer(    initialRestAuthLogoutListState,
+    on(actions.start, (state) => ({...state, loading: true, error: null})),
+    on(actions.success, (state,action) => ({...state, data: action.payload, loading: false})),
+    on(actions.error, (state,action) => ({...state, error: action.payload, loading: false}))
+  );

@@ -5,7 +5,7 @@
  * example.com/api-base-path
  */
 
-import {createFeatureSelector} from '@ngrx/store';
+import {createFeatureSelector, createReducer, on} from '@ngrx/store';
 
 import {HttpErrorResponse} from '@angular/common/http';
 import * as actions from './actions';
@@ -25,13 +25,8 @@ export const initialOrderState: OrderState = {
 export const selectorName = 'Order_Order';
 export const getOrderStateSelector = createFeatureSelector<OrderState>(selectorName);
 
-export function OrderReducer(
-  state: OrderState = initialOrderState,
-  action: actions.OrderAction): OrderState {
-  switch (action.type) {
-    case actions.Actions.START: return {...state, loading: true, error: null};
-    case actions.Actions.SUCCESS: return {...state, data: action.payload, loading: false};
-    case actions.Actions.ERROR: return {...state, error: action.payload, loading: false};
-    default: return state;
-  }
-}
+ export const orderReducer = createReducer(    initialOrderState,
+    on(actions.start, (state) => ({...state, loading: true, error: null})),
+    on(actions.success, (state,action) => ({...state, data: action.payload, loading: false})),
+    on(actions.error, (state,action) => ({...state, error: action.payload, loading: false}))
+  );

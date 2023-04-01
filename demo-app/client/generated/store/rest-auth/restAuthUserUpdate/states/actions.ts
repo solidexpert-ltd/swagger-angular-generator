@@ -6,7 +6,7 @@
  */
 
 import {HttpErrorResponse} from '@angular/common/http';
-import {Action} from '@ngrx/store';
+import {createAction, props} from '@ngrx/store';
 import {RestAuthUserUpdateParams} from '../../../../controllers/RestAuth';
 import * as __model from '../../../../model';
 
@@ -16,19 +16,7 @@ export enum Actions {
   ERROR = '[RestAuth restAuthUserUpdate] Error',
 }
 
-export class Start implements Action {
-  readonly type = Actions.START;
-  constructor(public payload: RestAuthUserUpdateParams) {}
-}
-
-export class Success implements Action {
-  readonly type = Actions.SUCCESS;
-  constructor(public payload: __model.UserDetails) {}
-}
-
-export class Error implements Action {
-  readonly type = Actions.ERROR;
-  constructor(public payload: HttpErrorResponse) {}
-}
-
-export type RestAuthUserUpdateAction = Start | Success | Error;
+export const start = createAction(Actions.START,props<RestAuthUserUpdateParams>());
+export const success = createAction(Actions.SUCCESS,props<__model.UserDetails>());
+export const error = createAction(Actions.ERROR,props<any>());
+//RestAuthUserUpdate

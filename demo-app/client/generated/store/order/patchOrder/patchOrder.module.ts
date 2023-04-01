@@ -14,13 +14,13 @@ import {FormsSharedModule} from '../../forms-shared.module';
 import {PatchOrderFormService} from './patchOrder.service';
 
 import {PatchOrderEffects} from './states/effects';
-import {PatchOrderReducer} from './states/reducers';
+import {patchOrderReducer} from './states/reducers';
 import {selectorName} from './states/reducers';
 
 @NgModule({
   imports: [
     FormsSharedModule,
-    NgrxStoreModule.forFeature(selectorName, PatchOrderReducer),
+    NgrxStoreModule.forFeature(selectorName, patchOrderReducer),
     NgrxEffectsModule.forFeature([PatchOrderEffects]),
   ],
   providers: [

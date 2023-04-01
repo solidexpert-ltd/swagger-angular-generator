@@ -5,7 +5,7 @@
  * example.com/api-base-path
  */
 
-import {createFeatureSelector} from '@ngrx/store';
+import {createFeatureSelector, createReducer, on} from '@ngrx/store';
 
 import {HttpErrorResponse} from '@angular/common/http';
 import * as actions from './actions';
@@ -25,13 +25,8 @@ export const initialRegistrationState: RegistrationState = {
 export const selectorName = 'Registration_Registration';
 export const getRegistrationStateSelector = createFeatureSelector<RegistrationState>(selectorName);
 
-export function RegistrationReducer(
-  state: RegistrationState = initialRegistrationState,
-  action: actions.RegistrationAction): RegistrationState {
-  switch (action.type) {
-    case actions.Actions.START: return {...state, loading: true, error: null};
-    case actions.Actions.SUCCESS: return {...state, data: action.payload, loading: false};
-    case actions.Actions.ERROR: return {...state, error: action.payload, loading: false};
-    default: return state;
-  }
-}
+ export const registrationReducer = createReducer(    initialRegistrationState,
+    on(actions.start, (state) => ({...state, loading: true, error: null})),
+    on(actions.success, (state,action) => ({...state, data: action.payload, loading: false})),
+    on(actions.error, (state,action) => ({...state, error: action.payload, loading: false}))
+  );

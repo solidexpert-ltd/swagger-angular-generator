@@ -13,13 +13,13 @@ import {LogoutService} from '../../../controllers/Logout';
 import {FormsSharedModule} from '../../forms-shared.module';
 
 import {LogoutEffects} from './states/effects';
-import {LogoutReducer} from './states/reducers';
+import {logoutReducer} from './states/reducers';
 import {selectorName} from './states/reducers';
 
 @NgModule({
   imports: [
     FormsSharedModule,
-    NgrxStoreModule.forFeature(selectorName, LogoutReducer),
+    NgrxStoreModule.forFeature(selectorName, logoutReducer),
     NgrxEffectsModule.forFeature([LogoutEffects]),
   ],
   providers: [
