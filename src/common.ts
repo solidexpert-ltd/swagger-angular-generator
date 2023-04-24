@@ -1,9 +1,9 @@
 import * as _ from 'lodash';
-import {isValidPropertyName} from 'tsutils';
+import { isValidPropertyName } from 'tsutils';
 
 import * as conf from './conf';
-import {NativeNames, Schema} from './types';
-import {indent, makeComment} from './utils';
+import { NativeNames, Schema } from './types';
+import { indent, makeComment } from './utils';
 
 export interface PropertyOutput {
   property: string;
@@ -20,15 +20,45 @@ export interface PropertyOutput {
  * @param namespace usage context for type name uniqueness
  */
 export function processProperty(prop: Schema, name = '', namespace = '',
-                                required: (string[] | boolean) = false,
-                                exportEnums = true): PropertyOutput[] {
+  required: (string[] | boolean) = false,
+  exportEnums = true): PropertyOutput[] {
   let type: string;
   let enumDeclaration: string | undefined;
   let native = true;
   let isMap = false;
 
+  let readOnly = '';
+  if (prop.readOnly) readOnly = 'readonly ';
+
+  let optional = '';
+  if (required === false && !isMap) optional = '?';
+  else if (Array.isArray(required) && !required.includes(name)) {
+    optional = '?';
+  }
+
+  const comments = [];
+  if (prop.description) comments.push(prop.description);
+  if (prop.example) comments.push(`example: ${prop.example}`);
+  if (prop.format) comments.push(`format: ${prop.format}`);
+  if (prop.default) comments.push(`default: ${prop.default}`);
+
+  const comment = makeComment(comments);
+
   if (prop.properties) {
-    return _.flatMap(prop.properties, (v, k) => processProperty(v, k, namespace, prop.required));
+
+    if (name && name.length > 1) {
+
+      let output1 = `{\n`;
+      output1 += indent(_.map(_.flatMap(prop.properties, (v, k) => processProperty(v, k, namespace, prop.required)), 'property').join('\n'));
+      output1 += `\n}\n`;
+
+      let property1 = `${comment}${readOnly}${name}: ${output1};`;
+      let propertyAsMethodParameter1 = `${name}: ${output1}`;
+
+      return [{ property: property1, propertyAsMethodParameter: propertyAsMethodParameter1, enumDeclaration, native, isRequired: optional !== '?' }];
+    } else {
+      return _.flatMap(prop.properties, (v, k) => processProperty(v, k, namespace, prop.required));
+    }
   }
 
   if (prop.enum || (prop.items && prop.items.enum)) {
@@ -60,7 +90,14 @@ export function processProperty(prop: Schema, name = '', namespace = '',
       case 'array':
         defType = translateType(prop.items && (prop.items.type || prop.items.$ref));
         const itemProp = processProperty(prop.items)[0];
-        type = `${itemProp.property}[]`;
+        if (defType.native && defType.type == 'object') {
+          let lastindex = itemProp.property.lastIndexOf(";");
+          if (lastindex != -1)
+            itemProp.property = itemProp.property.substring(0, lastindex);
+          type = `{${itemProp.property}}[]`;
+        } else {
+          type = `${itemProp.property}[]`;
+        }
         break;
       default:
         if (prop.additionalProperties) {
@@ -91,36 +128,25 @@ export function processProperty(prop: Schema, name = '', namespace = '',
     native = defType.native;
   }
 
-  let optional = '';
-  if (required === false && !isMap) optional = '?';
-  else if (Array.isArray(required) && !required.includes(name)) {
-    optional = '?';
-  }
-
-  let readOnly = '';
-  if (prop.readOnly) readOnly = 'readonly ';
-
-  const comments = [];
-  if (prop.description) comments.push(prop.description);
-  if (prop.example) comments.push(`example: ${prop.example}`);
-  if (prop.format) comments.push(`format: ${prop.format}`);
-  if (prop.default) comments.push(`default: ${prop.default}`);
-
-  const comment = makeComment(comments);
   let property;
   let propertyAsMethodParameter;
 
   // pure type is returned if no name is specified
   if (name) {
-    if (!isMap) name = getAccessor(name);
-    property = `${comment}${readOnly}${name}${optional}: ${type};`;
-    propertyAsMethodParameter = `${name}${optional}: ${type}`;
+    if (!isMap) {
+      name = getAccessor(name);
+      property = `${comment}${readOnly}${name}${optional}: ${type};`;
+      propertyAsMethodParameter = `${name}${optional}: ${type}`;
+    } else {
+      property = `${comment}${readOnly}${name}: ${type};`;
+      propertyAsMethodParameter = `${name}: ${type}`;
+    }
   } else {
     property = `${type}`;
     propertyAsMethodParameter = property;
   }
 
-  return [{property, propertyAsMethodParameter, enumDeclaration, native, isRequired: optional !== '?'}];
+  return [{ property, propertyAsMethodParameter, enumDeclaration, native, isRequired: optional !== '?' }];
 }
 
 /**
@@ -164,15 +190,18 @@ interface DefType {
  * @param type definition
  */
 export function translateType(type: string | undefined): DefType {
+  if (type == null || type == 'undefined' || typeof (type) == undefined)
+    return { type: conf.nativeTypes['object'], native: true }
+
   if (type in conf.nativeTypes) {
     const typeType = type as NativeNames;
-    return {type: conf.nativeTypes[typeType], native: true};
+    return { type: conf.nativeTypes[typeType], native: true };
   }
 
-  const subtype = type.match(/^#\/definitions\/(.*)/);
+  const subtype = type.match(/^#\/components\/schemas\/(.*)/) || type.match(/^#\/definitions\/(.*)/);
   if (subtype) return resolveDefType(subtype[1]);
 
-  return {type, native: true};
+  return { type, native: true };
 }
 
 /**
@@ -185,11 +214,11 @@ function resolveDefType(type: string): DefType {
   // does not seem to happen but the function is ready for that
   if (type in conf.nativeTypes) {
     const typedType = type as NativeNames;
-    return {type: conf.nativeTypes[typedType], native: true};
+    return { type: conf.nativeTypes[typedType], native: true };
   }
 
   type = normalizeDef(type);
-  return {type: `__${conf.modelFile}.${type}`, native: false};
+  return { type: `__${conf.modelFile}.${type}`, native: false };
 }
 
 export function getAccessor(key: string, propName = '') {

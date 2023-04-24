@@ -1,7 +1,7 @@
 {
   "name": "@solidexpert/swagger-angular-generator",
-  "version": "13.0.8",
-  "description": "Generator of API layer in TypeScript for Angular 13 apps",
+  "version": "13.0.23",
+  "description": "Generator of API layer in TypeScript for Angular 13 apps && swagger 3.0",
   "main": "dist/generate.js",
   "types": "dist/generate.d.ts",
   "bin": "dist/index.js",

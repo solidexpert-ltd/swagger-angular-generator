@@ -15,8 +15,37 @@ function processProperty(prop, name = '', namespace = '', required = false, expo
     let enumDeclaration;
     let native = true;
     let isMap = false;
+    let readOnly = '';
+    if (prop.readOnly)
+        readOnly = 'readonly ';
+    let optional = '';
+    if (required === false && !isMap)
+        optional = '?';
+    else if (Array.isArray(required) && !required.includes(name)) {
+        optional = '?';
+    }
+    const comments = [];
+    if (prop.description)
+        comments.push(prop.description);
+    if (prop.example)
+        comments.push(`example: ${prop.example}`);
+    if (prop.format)
+        comments.push(`format: ${prop.format}`);
+    if (prop.default)
+        comments.push(`default: ${prop.default}`);
+    const comment = utils_1.makeComment(comments);
     if (prop.properties) {
-        return _.flatMap(prop.properties, (v, k) => processProperty(v, k, namespace, prop.required));
+        if (name && name.length > 1) {
+            let output1 = `{\n`;
+            output1 += utils_1.indent(_.map(_.flatMap(prop.properties, (v, k) => processProperty(v, k, namespace, prop.required)), 'property').join('\n'));
+            output1 += `\n}\n`;
+            let property1 = `${comment}${readOnly}${name}: ${output1};`;
+            let propertyAsMethodParameter1 = `${name}: ${output1}`;
+            return [{ property: property1, propertyAsMethodParameter: propertyAsMethodParameter1, enumDeclaration, native, isRequired: optional !== '?' }];
+        }
+        else {
+            return _.flatMap(prop.properties, (v, k) => processProperty(v, k, namespace, prop.required));
+        }
     }
     if (prop.enum || (prop.items && prop.items.enum)) {
         type = _.upperFirst(name);
@@ -47,7 +76,15 @@ function processProperty(prop, name = '', namespace = '', required = false, expo
             case 'array':
                 defType = translateType(prop.items && (prop.items.type || prop.items.$ref));
                 const itemProp = processProperty(prop.items)[0];
-                type = `${itemProp.property}[]`;
+                if (defType.native && defType.type == 'object') {
+                    let lastindex = itemProp.property.lastIndexOf(";");
+                    if (lastindex != -1)
+                        itemProp.property = itemProp.property.substring(0, lastindex);
+                    type = `{${itemProp.property}}[]`;
+                }
+                else {
+                    type = `${itemProp.property}[]`;
+                }
                 break;
             default:
                 if (prop.additionalProperties) {
@@ -78,33 +115,19 @@ function processProperty(prop, name = '', namespace = '', required = false, expo
         }
         native = defType.native;
     }
-    let optional = '';
-    if (required === false && !isMap)
-        optional = '?';
-    else if (Array.isArray(required) && !required.includes(name)) {
-        optional = '?';
-    }
-    let readOnly = '';
-    if (prop.readOnly)
-        readOnly = 'readonly ';
-    const comments = [];
-    if (prop.description)
-        comments.push(prop.description);
-    if (prop.example)
-        comments.push(`example: ${prop.example}`);
-    if (prop.format)
-        comments.push(`format: ${prop.format}`);
-    if (prop.default)
-        comments.push(`default: ${prop.default}`);
-    const comment = utils_1.makeComment(comments);
     let property;
     let propertyAsMethodParameter;
     // pure type is returned if no name is specified
     if (name) {
-        if (!isMap)
+        if (!isMap) {
             name = getAccessor(name);
-        property = `${comment}${readOnly}${name}${optional}: ${type};`;
-        propertyAsMethodParameter = `${name}${optional}: ${type}`;
+            property = `${comment}${readOnly}${name}${optional}: ${type};`;
+            propertyAsMethodParameter = `${name}${optional}: ${type}`;
+        }
+        else {
+            property = `${comment}${readOnly}${name}: ${type};`;
+            propertyAsMethodParameter = `${name}: ${type}`;
+        }
     }
     else {
         property = `${type}`;
@@ -146,11 +169,13 @@ exports.normalizeDef = normalizeDef;
  * @param type definition
  */
 function translateType(type) {
+    if (type == null || type == 'undefined' || typeof (type) == undefined)
+        return { type: conf.nativeTypes['object'], native: true };
     if (type in conf.nativeTypes) {
         const typeType = type;
         return { type: conf.nativeTypes[typeType], native: true };
     }
-    const subtype = type.match(/^#\/definitions\/(.*)/);
+    const subtype = type.match(/^#\/components\/schemas\/(.*)/) || type.match(/^#\/definitions\/(.*)/);
     if (subtype)
         return resolveDefType(subtype[1]);
     return { type, native: true };

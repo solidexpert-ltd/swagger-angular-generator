@@ -61,7 +61,7 @@ export function generate(
   generateCommon(path.join(dest, conf.commonDir));
 
   if (!fs.existsSync(dest)) fs.mkdirSync(dest);
-  const definitions = processDefinitions(schema.definitions, config);
+  const definitions = processDefinitions(schema.definitions || schema.components.schemas, config);
   processPaths(schema.paths, `http://${schema.host}${swaggerUrlPath}${conf.swaggerFile}`,
                config, definitions, schema.basePath);
 }
