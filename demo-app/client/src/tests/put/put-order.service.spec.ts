@@ -26,7 +26,7 @@ describe(`Order put`, () => {
 
     const req = backend.expectOne('/api-base-path/order/100').request;
     expect(req.method).toBe('PUT');
-    const bodyParams = {...params};
+    const bodyParams: Partial<PutOrderParams> = {...params};
     delete bodyParams.orderId;
     expect(req.body).toEqual(bodyParams);
   });

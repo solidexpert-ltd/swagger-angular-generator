@@ -25,7 +25,7 @@ export function processPaths(pathsWithParameters: PathsWithParameters, swaggerPa
 
   const paths = preProcessPaths(pathsWithParameters);
   const controllers: ControllerMethod[] = _.flatMap(paths, (methods, url: string) => (
-    _.map(methods, (method, methodName: MethodName) => ({
+    _.map(methods, (method, methodName: MethodName): ControllerMethod => ({
       url,
       name: getName(method),
       methodName,

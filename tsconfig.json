@@ -1,18 +1,24 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "strict": false,
     "declaration": false,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
+    "module": "commonjs",
     "noImplicitAny": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
+    "noUncheckedSideEffectImports": false,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "rootDir": "src",
+    "types": ["node"],
     "lib": [
       "dom",
       "es2017"
     ],
-    "module": "commonjs",
     "sourceMap": true,
     "target": "es2017"
   },

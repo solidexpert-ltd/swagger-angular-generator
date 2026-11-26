@@ -32,7 +32,7 @@ describe(`LoginService`, () => {
 
     const req = backend.expectOne('/api-base-path/registration/admin').request;
     expect(req.method).toBe('POST');
-    const bodyParams = {...params};
+    const bodyParams: Partial<RegistrationParams> = {...params};
     delete bodyParams.registrationType;
     expect(req.body).toEqual(bodyParams);
   });

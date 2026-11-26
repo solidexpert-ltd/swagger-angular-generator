@@ -1,4 +1,4 @@
-import {NgModule} from '@angular/core';
+import {NgModule, provideZoneChangeDetection} from '@angular/core';
 import {AppComponent} from './app.component';
 
 import {EffectsModule} from '@ngrx/effects';
@@ -23,6 +23,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
     HttpClientModule,
   ],
   providers: [
+    provideZoneChangeDetection(),
     OrderService,
     ProductDetailService,
     ProductsService,

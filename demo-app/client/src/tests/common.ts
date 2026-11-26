@@ -24,7 +24,7 @@ export function initHttpBed<T>(service: ClassInterface<T>, providers: Array<Clas
   });
 
   return {
-    service: TestBed.get(service),
-    backend: TestBed.get(HttpTestingController),
+    service: TestBed.inject(service),
+    backend: TestBed.inject(HttpTestingController),
   };
 }

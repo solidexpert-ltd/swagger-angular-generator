@@ -1,8 +1,46 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
 Object.defineProperty(exports, "__esModule", { value: true });
-const _ = require("lodash");
+exports.processProperty = processProperty;
+exports.normalizeDef = normalizeDef;
+exports.translateType = translateType;
+exports.getAccessor = getAccessor;
+exports.getObjectPropSetter = getObjectPropSetter;
+const _ = __importStar(require("lodash"));
 const tsutils_1 = require("tsutils");
-const conf = require("./conf");
+const conf = __importStar(require("./conf"));
 const utils_1 = require("./utils");
 /**
  * Processes one property of the type
@@ -33,11 +71,11 @@ function processProperty(prop, name = '', namespace = '', required = false, expo
         comments.push(`format: ${prop.format}`);
     if (prop.default)
         comments.push(`default: ${prop.default}`);
-    const comment = utils_1.makeComment(comments);
+    const comment = (0, utils_1.makeComment)(comments);
     if (prop.properties) {
         if (name && name.length > 1) {
             let output1 = `{\n`;
-            output1 += utils_1.indent(_.map(_.flatMap(prop.properties, (v, k) => processProperty(v, k, namespace, prop.required)), 'property').join('\n'));
+            output1 += (0, utils_1.indent)(_.map(_.flatMap(prop.properties, (v, k) => processProperty(v, k, namespace, prop.required)), 'property').join('\n'));
             output1 += `\n}\n`;
             let property1 = `${comment}${readOnly}${name}: ${output1};`;
             let propertyAsMethodParameter1 = `${name}: ${output1}`;
@@ -57,10 +95,10 @@ function processProperty(prop, name = '', namespace = '', required = false, expo
         const exp = exportEnums ? 'export ' : '';
         let enumValues;
         if (typeof list[0] === 'number') {
-            enumValues = utils_1.indent(list.join(' |\n'));
+            enumValues = (0, utils_1.indent)(list.join(' |\n'));
         }
         else {
-            enumValues = utils_1.indent('\'' + list.join('\' |\n\'')) + '\'';
+            enumValues = (0, utils_1.indent)('\'' + list.join('\' |\n\'')) + '\'';
         }
         enumDeclaration = `${exp}type ${type} =\n${enumValues};`;
         if (prop.type === 'array')
@@ -135,7 +173,6 @@ function processProperty(prop, name = '', namespace = '', required = false, expo
     }
     return [{ property, propertyAsMethodParameter, enumDeclaration, native, isRequired: optional !== '?' }];
 }
-exports.processProperty = processProperty;
 /**
  * - recursive inside-out unwrapping of generics
  * - space removal e.g.
@@ -163,7 +200,6 @@ function normalizeDef(type) {
     res = _.upperFirst(res);
     return res;
 }
-exports.normalizeDef = normalizeDef;
 /**
  * Translates schema type into native/defined type for typescript
  * @param type definition
@@ -180,7 +216,6 @@ function translateType(type) {
         return resolveDefType(subtype[1]);
     return { type, native: true };
 }
-exports.translateType = translateType;
 /**
  * Checks whether the type should reference internally defined type
  * and returns its reference to globally exported interfaces
@@ -198,7 +233,7 @@ function resolveDefType(type) {
 }
 function getAccessor(key, propName = '') {
     let res = key;
-    if (tsutils_1.isValidPropertyName(key)) {
+    if ((0, tsutils_1.isValidPropertyName)(key)) {
         if (propName)
             return `${propName}.${res}`;
         return res;
@@ -208,9 +243,7 @@ function getAccessor(key, propName = '') {
         return `${propName}[${res}]`;
     return res;
 }
-exports.getAccessor = getAccessor;
 function getObjectPropSetter(key, propName, suffix = '') {
     return `${getAccessor(key)}: ${getAccessor(key, propName)}${suffix},`;
 }
-exports.getObjectPropSetter = getObjectPropSetter;
 //# sourceMappingURL=common.js.map

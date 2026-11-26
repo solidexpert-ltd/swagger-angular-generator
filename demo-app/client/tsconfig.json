@@ -1,27 +1,33 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "strict": false,
     "declaration": false,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
+    "module": "ES2022",
     "noImplicitAny": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
+    "noUncheckedSideEffectImports": false,
     "strictNullChecks": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "useDefineForClassFields": false,
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
-    "target": "es5",
-    "typeRoots": [
-      "node_modules/@types"
-    ],
+    "target": "ES2022",
     "lib": [
       "dom",
-      "es2017"
+      "es2022"
     ]
   },
   "include": [
     "src/**/*.ts",
     "generated/**/*.ts"
-  ]
+  ],
+  "angularCompilerOptions": {
+    "strictTemplates": false
+  }
 }

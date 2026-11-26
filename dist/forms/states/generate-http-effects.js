@@ -1,7 +1,41 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
 Object.defineProperty(exports, "__esModule", { value: true });
-const path = require("path");
-const _ = require("lodash");
+exports.generateHttpEffects = generateHttpEffects;
+const path = __importStar(require("path"));
+const _ = __importStar(require("lodash"));
 const utils_1 = require("../../utils");
 function generateHttpEffects(config, name, simpleName, actionClassNameBase, formSubDirName, paramGroups) {
     let content = '';
@@ -11,9 +45,8 @@ function generateHttpEffects(config, name, simpleName, actionClassNameBase, form
     content += getConstructorDefinition(name);
     content += `}\n`;
     const effectsFileName = path.join(formSubDirName, `states`, `effects.ts`);
-    utils_1.writeFile(effectsFileName, content, config.header);
+    (0, utils_1.writeFile)(effectsFileName, content, config.header);
 }
-exports.generateHttpEffects = generateHttpEffects;
 function getEffectsImports(name) {
     let res = `import {HttpErrorResponse} from '@angular/common/http';\n`;
     res += `import {Injectable} from '@angular/core';\n`;
@@ -34,21 +67,21 @@ function getEffectsStartDefinition(actionClassNameBase) {
 }
 function getConstructorDefinition(name) {
     let res = `constructor(\n`;
-    res += utils_1.indent(`private storeActions: Actions,\n`);
-    res += utils_1.indent(`private ${name.toLowerCase()}Service: ${name}Service,\n`);
+    res += (0, utils_1.indent)(`private storeActions: Actions,\n`);
+    res += (0, utils_1.indent)(`private ${name.toLowerCase()}Service: ${name}Service,\n`);
     res += `) {}\n\n`;
-    return utils_1.indent(res);
+    return (0, utils_1.indent)(res);
 }
 function getEffectDefinition(actionClassNameBase, name, simpleName, hasParams) {
     //const startActionPayloadDefinition = getStartActionPayloadDefinition(hasParams);
     let res = `${_.lowerFirst(actionClassNameBase)}$ = createEffect(()=>this.storeActions.pipe(\n`;
-    res += utils_1.indent([`ofType(actions.Actions.START),\n`,
+    res += (0, utils_1.indent)([`ofType(actions.Actions.START),\n`,
         `switchMap((action: any) => this.${name.toLowerCase()}Service.${simpleName}(action.payload)\n`], 2);
-    res += utils_1.indent(`.pipe(\n`, 3);
-    res += utils_1.indent([`map(result => ({ type: actions.Actions.SUCCESS, payload: result })),\n`,
+    res += (0, utils_1.indent)(`.pipe(\n`, 3);
+    res += (0, utils_1.indent)([`map(result => ({ type: actions.Actions.SUCCESS, payload: result })),\n`,
         ` catchError((error: HttpErrorResponse) => of(({ type: actions.Actions.SUCCESS, payload: error }))),\n`], 4);
-    res += utils_1.indent(`),\n`, 3);
-    res += utils_1.indent(`),\n`, 2);
+    res += (0, utils_1.indent)(`),\n`, 3);
+    res += (0, utils_1.indent)(`),\n`, 2);
     res += `));\n\n//${hasParams}`;
     // let res = indent(`@Effect()\n`);
     // res += indent(`${actionClassNameBase} = this.storeActions.pipe(\n`);

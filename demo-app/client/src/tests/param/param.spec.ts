@@ -50,9 +50,9 @@ describe(`Param call`, () => {
     expect(req.params.get('queryParamCollectionDefault')).toEqual(mock.queryParamCollectionDefault.join(','));
     expect(req.params.get('queryParamCollectionCsv')).toEqual(mock.queryParamCollectionCsv.join(','));
     expect(req.params.get('queryParamCollectionSsv')).toEqual(mock.queryParamCollectionSsv.join(' '));
-    // `number[]` stored that way - not cast to `string[]`
-    expect(req.params.getAll('queryParamCollectionMulti') as any[])
-      .toEqual(mock.queryParamCollectionMulti as any[]);
+    // HttpParams stores every query value as a string.
+    expect(req.params.getAll('queryParamCollectionMulti'))
+      .toEqual(mock.queryParamCollectionMulti.map(value => value.toString()));
 
     expect(req.params.get('dashed-query-param')).toEqual(mock['dashed-query-param'].toString());
     expect(req.params.get('dashed-query-param-collection-tsv'))
